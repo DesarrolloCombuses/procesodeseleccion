@@ -9,5 +9,6 @@ window.SUPABASE_CONFIG = {
   url: 'https://cbplebkmxrkaafqdhiyi.supabase.co',
   key: 'sb_publishable_DZCceNTENY4ViP17-eZrGg_bdMElZ9X',
   bucket: 'hojas-vida',
-  tabla: 'hojas_vida'
+  tabla: 'hojas_vida',
+  app: 'procesodeseleccion'
 };

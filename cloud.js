@@ -69,8 +69,9 @@
   async function cargarRol() {
     const s = leerSesion();
     if (!s || !s.user) return 'usuario';
+    const app = cfg.app || 'procesodeseleccion';
     try {
-      const arr = await dbSelect('perfiles?select=rol&id=eq.' + s.user.id);
+      const arr = await dbSelect('roles_app?select=rol&user_id=eq.' + s.user.id + '&app=eq.' + app);
       return (arr[0] && arr[0].rol) || 'usuario';
     } catch (e) { dbg('rol error: ' + e.message); return 'usuario'; }
   }
