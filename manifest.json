@@ -1,0 +1,26 @@
+{
+  "name": "Hoja de Vida Conductor - COMBUSES",
+  "short_name": "HV COMBUSES",
+  "description": "Formato FO-GTH-08 para diligenciar la hoja de vida de conductores de COMBUSES.",
+  "lang": "es-CO",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f0f2f5",
+  "theme_color": "#10528f",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

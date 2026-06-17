@@ -1,0 +1,12 @@
+# No subir la configuración SQL ni el Excel original
+supabase/
+*.xls
+*.xlsx
+
+# Configuración local de herramientas
+.claude/
+
+# Archivos del sistema
+Thumbs.db
+.DS_Store
+desktop.ini

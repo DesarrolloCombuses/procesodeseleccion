@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#10528f" />
+  <title>Hoja de Vida Conductor - COMBUSES</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- PANTALLA DE INICIO DE SESIÓN (no se imprime) -->
+  <div id="loginScreen" class="login-screen no-print">
+    <form id="loginForm" class="login-card" autocomplete="on">
+      <img src="icons/logo.png" alt="COMBUSES" class="login-logo" />
+      <h1 class="login-title">Hoja de Vida Conductor</h1>
+      <p class="login-sub">Ingreso para personal de COMBUSES</p>
+      <label class="login-label" for="loginEmail">Correo</label>
+      <input type="email" id="loginEmail" class="login-input" required autocomplete="username" placeholder="correo@combuses.com.co" />
+      <label class="login-label" for="loginPassword">Contraseña</label>
+      <div class="login-pass-wrap">
+        <input type="password" id="loginPassword" class="login-input" required autocomplete="current-password" placeholder="••••••••" />
+        <button type="button" id="togglePass" class="login-eye" title="Mostrar/ocultar">👁️</button>
+      </div>
+      <button type="submit" id="btnLogin" class="btn btn-primary login-btn">Ingresar</button>
+      <p id="loginError" class="login-error" hidden></p>
+    </form>
+  </div>
+
+  <!-- Barra de herramientas (no se imprime) -->
+  <div class="toolbar no-print">
+    <div class="toolbar-title">📋 Hoja de Vida Conductor</div>
+    <div class="toolbar-actions">
+      <span id="saveStatus" class="save-status">Guardado automático activo</span>
+      <button type="button" id="btnPrint" class="btn btn-primary">🖨️ Imprimir / PDF</button>
+      <button type="button" id="btnNew" class="btn btn-light">🗑️ Nuevo</button>
+      <button type="button" id="btnInstall" class="btn btn-light" hidden>⬇️ Instalar app</button>
+      <span id="userEmail" class="user-email" hidden></span>
+      <button type="button" id="btnLogout" class="btn btn-light" hidden>🔓 Salir</button>
+      <span id="appVersion" class="app-version" title="Versión de la aplicación"></span>
+    </div>
+  </div>
+
+  <!-- Aviso de actualización disponible (no se imprime) -->
+  <div id="updateBanner" class="update-banner no-print" hidden>
+    <span>🔄 Hay una versión nueva disponible.</span>
+    <button type="button" id="btnUpdate" class="btn btn-primary btn-sm">Actualizar ahora</button>
+  </div>
+
+  <main class="page">
+    <form id="hvForm" autocomplete="off">
+
+      <p class="obligatorio-nota no-print">⚠️ <strong>Todos los campos son obligatorios.</strong> Debes completarlos (incluida la foto y las firmas) antes de imprimir o generar el PDF.</p>
+
+      <!-- ENCABEZADO -->
+      <header class="doc-header">
+        <div class="logo-box">
+          <img src="icons/logo.png" alt="COMBUSES" class="logo-img" />
+        </div>
+        <h1 class="doc-title">FORMATO DE HOJA DE VIDA</h1>
+        <div class="doc-meta">
+          <div><strong>Código:</strong> FO-GTH-08</div>
+          <div><strong>Versión:</strong> 001</div>
+          <div><strong>Fecha:</strong> 14/05/2026</div>
+        </div>
+      </header>
+
+      <!-- DATOS PERSONALES -->
+      <section class="block">
+        <h2 class="section-title">DATOS PERSONALES</h2>
+        <div class="datos-personales">
+          <div class="dp-fields">
+            <div class="row">
+              <div class="field"><label>Vehículo</label><input type="text" name="vehiculo" /></div>
+              <div class="field inline-q">
+                <label>¿Ha trabajado antes en esta empresa?</label>
+                <div class="sino">
+                  <label><input type="radio" name="trabajo_antes" value="SI" /> SI</label>
+                  <label><input type="radio" name="trabajo_antes" value="NO" /> NO</label>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="field"><label>Fecha de elaboración</label><input type="date" name="fecha_elaboracion" /></div>
+              <div class="field"><label>Lugar de nacimiento</label><input type="text" name="lugar_nacimiento" /></div>
+            </div>
+            <div class="row">
+              <div class="field"><label>Nombres</label><input type="text" name="nombres" /></div>
+              <div class="field"><label>Identificación C.C.</label><input type="text" name="identificacion" inputmode="numeric" /></div>
+            </div>
+            <div class="row">
+              <div class="field"><label>Apellidos</label><input type="text" name="apellidos" /></div>
+              <div class="field"><label>Lugar de expedición</label><input type="text" name="lugar_expedicion" /></div>
+            </div>
+            <div class="row">
+              <div class="field"><label>Fecha de nacimiento</label><input type="date" name="fecha_nacimiento" /></div>
+              <div class="field"><label>Estado civil</label>
+                <select name="estado_civil">
+                  <option value=""></option>
+                  <option>Soltero(a)</option>
+                  <option>Casado(a)</option>
+                  <option>Unión libre</option>
+                  <option>Separado(a)</option>
+                  <option>Divorciado(a)</option>
+                  <option>Viudo(a)</option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="field"><label>Cargo</label><input type="text" name="cargo" /></div>
+              <div class="field"><label>Años de experiencia</label><input type="number" min="0" name="anos_experiencia" /></div>
+              <div class="field"><label>Tipo de sangre</label>
+                <select name="tipo_sangre">
+                  <option value=""></option>
+                  <option>O+</option><option>O-</option>
+                  <option>A+</option><option>A-</option>
+                  <option>B+</option><option>B-</option>
+                  <option>AB+</option><option>AB-</option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="field grow"><label>Dirección residencia</label><input type="text" name="direccion" /></div>
+              <div class="field"><label>Barrio</label><input type="text" name="barrio" /></div>
+              <div class="field"><label>Ciudad</label><input type="text" name="ciudad" /></div>
+            </div>
+            <div class="row">
+              <div class="field"><label>E-mail</label><input type="email" name="email" /></div>
+              <div class="field"><label>Celular</label><input type="tel" name="celular" inputmode="tel" /></div>
+              <div class="field"><label>Tel. residencia</label><input type="tel" name="tel_residencia" inputmode="tel" /></div>
+            </div>
+            <div class="row">
+              <div class="field inline-q">
+                <label>¿Tiene libreta militar?</label>
+                <div class="sino">
+                  <label><input type="radio" name="tiene_libreta" value="SI" /> SI</label>
+                  <label><input type="radio" name="tiene_libreta" value="NO" /> NO</label>
+                </div>
+              </div>
+              <div class="field" data-show-when="tiene_libreta:SI" hidden><label>Libreta militar número</label><input type="text" name="libreta_militar" /></div>
+            </div>
+            <div class="row">
+              <div class="field"><label>Cat. licencia de conducción</label><input type="text" name="cat_licencia" /></div>
+              <div class="field"><label>Vence</label><input type="date" name="licencia_vence" /></div>
+            </div>
+          </div>
+
+          <!-- FOTO -->
+          <div class="dp-foto">
+            <label class="foto-label">FOTO RECIENTE</label>
+            <div class="foto-box" id="fotoBox">
+              <img id="fotoPreview" alt="Foto del conductor" hidden />
+              <span class="foto-placeholder" id="fotoPlaceholder">Sin foto</span>
+            </div>
+            <div class="foto-actions no-print">
+              <label class="btn btn-light btn-sm">
+                📷 Foto
+                <input type="file" id="fotoInput" accept="image/*" capture="user" hidden />
+              </label>
+              <button type="button" id="btnFotoDel" class="btn btn-light btn-sm">Quitar</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEGURIDAD SOCIAL -->
+      <section class="block">
+        <h2 class="section-title">SEGURIDAD SOCIAL</h2>
+        <div class="row">
+          <div class="field">
+            <label>Empresa Promotora EPS</label>
+            <select name="eps" class="con-otra" data-otra="eps_otra">
+              <option value=""></option>
+              <option>Nueva EPS</option>
+              <option>EPS Sura</option>
+              <option>EPS Sanitas</option>
+              <option>Salud Total EPS</option>
+              <option>Famisanar EPS</option>
+              <option>Compensar EPS</option>
+              <option>Coosalud EPS</option>
+              <option>Aliansalud EPS</option>
+              <option>Servicio Occidental de Salud (SOS)</option>
+              <option>Comfenalco Valle EPS</option>
+              <option>EPM (Empresas Públicas de Medellín)</option>
+              <option>Mutual Ser EPS</option>
+              <option>Cajacopi EPS</option>
+              <option>Capital Salud EPS</option>
+              <option>Asmet Salud EPS</option>
+              <option>Emssanar EPS</option>
+              <option>EPS Familiar de Colombia</option>
+              <option>Fondo Pasivo Social Ferrocarriles Nacionales</option>
+              <option value="Otra">Otra (escribir)…</option>
+            </select>
+            <input type="text" name="eps_otra" class="otra-input" placeholder="Escriba el nombre de la EPS" hidden />
+          </div>
+          <div class="field">
+            <label>Fondo de Cesantías</label>
+            <select name="cesantias" class="con-otra" data-otra="cesantias_otra">
+              <option value=""></option>
+              <option>Porvenir</option>
+              <option>Protección</option>
+              <option>Colfondos</option>
+              <option>Skandia</option>
+              <option>Fondo Nacional del Ahorro (FNA)</option>
+              <option value="Otra">Otra (escribir)…</option>
+            </select>
+            <input type="text" name="cesantias_otra" class="otra-input" placeholder="Escriba el fondo de cesantías" hidden />
+          </div>
+          <div class="field">
+            <label>Fondo de Pensiones</label>
+            <select name="pensiones" class="con-otra" data-otra="pensiones_otra">
+              <option value=""></option>
+              <option>Colpensiones</option>
+              <option>Porvenir</option>
+              <option>Protección</option>
+              <option>Colfondos</option>
+              <option>Skandia</option>
+              <option value="Otra">Otra (escribir)…</option>
+            </select>
+            <input type="text" name="pensiones_otra" class="otra-input" placeholder="Escriba el fondo de pensiones" hidden />
+          </div>
+        </div>
+      </section>
+
+      <!-- EDUCACIÓN -->
+      <section class="block">
+        <h2 class="section-title">EDUCACIÓN Y APTITUDES</h2>
+        <table class="grid-table">
+          <thead>
+            <tr><th>Nivel</th><th>Establecimiento donde estudió</th><th>Ciudad</th><th>Último grado / Título</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Primaria</td>
+              <td><input type="text" name="edu_primaria_est" /></td>
+              <td><input type="text" name="edu_primaria_ciudad" /></td>
+              <td><input type="text" name="edu_primaria_grado" /></td>
+            </tr>
+            <tr>
+              <td>Bachillerato</td>
+              <td><input type="text" name="edu_bachiller_est" /></td>
+              <td><input type="text" name="edu_bachiller_ciudad" /></td>
+              <td><input type="text" name="edu_bachiller_grado" /></td>
+            </tr>
+            <tr>
+              <td>Educación superior</td>
+              <td><input type="text" name="edu_superior_est" /></td>
+              <td><input type="text" name="edu_superior_ciudad" /></td>
+              <td><input type="text" name="edu_superior_titulo" /></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="row mt">
+          <div class="field inline-q">
+            <label>¿Ha realizado cursos de seguridad vial?</label>
+            <div class="sino">
+              <label><input type="radio" name="curso_vial" value="SI" /> SI</label>
+              <label><input type="radio" name="curso_vial" value="NO" /> NO</label>
+            </div>
+          </div>
+          <div class="field grow" data-show-when="curso_vial:SI" hidden><label>¿Cuál?</label><input type="text" name="curso_vial_cual" /></div>
+        </div>
+      </section>
+
+      <!-- EXPERIENCIA LABORAL -->
+      <section class="block">
+        <h2 class="section-title">EXPERIENCIA LABORAL</h2>
+        <div class="row">
+          <div class="field inline-q">
+            <label>¿Tiene experiencia laboral?</label>
+            <div class="sino">
+              <label><input type="radio" name="tiene_experiencia" value="SI" /> SI</label>
+              <label><input type="radio" name="tiene_experiencia" value="NO" /> NO</label>
+            </div>
+          </div>
+        </div>
+        <div id="expCampos" data-show-when="tiene_experiencia:SI" hidden>
+        <div class="row">
+          <div class="field grow"><label>Nombre de la última o actual empresa</label><input type="text" name="exp_empresa" /></div>
+        </div>
+        <div class="row">
+          <div class="field grow"><label>Dirección</label><input type="text" name="exp_direccion" /></div>
+          <div class="field"><label>Teléfono</label><input type="tel" name="exp_telefono" /></div>
+          <div class="field"><label>Celular</label><input type="tel" name="exp_celular" /></div>
+        </div>
+        <div class="row">
+          <div class="field grow"><label>Nombre de su jefe inmediato</label><input type="text" name="exp_jefe" /></div>
+          <div class="field"><label>Tiempo laborado</label><input type="text" name="exp_tiempo" /></div>
+        </div>
+        <div class="row">
+          <div class="field grow"><label>Funciones realizadas</label><textarea name="exp_funciones" rows="2"></textarea></div>
+        </div>
+        <div class="row">
+          <div class="field"><label>Fecha de ingreso</label><input type="date" name="exp_ingreso" /></div>
+          <div class="field"><label>Fecha de retiro</label><input type="date" name="exp_retiro" /></div>
+          <div class="field grow"><label>Cargo</label><input type="text" name="exp_cargo" /></div>
+        </div>
+        <div class="row">
+          <div class="field grow"><label>Motivo de retiro</label><input type="text" name="exp_motivo" /></div>
+        </div>
+        </div><!-- /#expCampos -->
+      </section>
+
+      <!-- REFERENCIAS LABORALES -->
+      <section class="block">
+        <h2 class="section-title">REFERENCIAS LABORALES</h2>
+        <table class="grid-table">
+          <thead><tr><th>Nombre de la empresa</th><th>Teléfono</th></tr></thead>
+          <tbody>
+            <tr><td><input type="text" name="refl_empresa_1" /></td><td><input type="tel" name="refl_tel_1" /></td></tr>
+            <tr><td><input type="text" name="refl_empresa_2" /></td><td><input type="tel" name="refl_tel_2" /></td></tr>
+            <tr><td><input type="text" name="refl_empresa_3" /></td><td><input type="tel" name="refl_tel_3" /></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- INFORMACIÓN FAMILIAR -->
+      <section class="block">
+        <h2 class="section-title">INFORMACIÓN FAMILIAR</h2>
+        <div class="row">
+          <div class="field inline-q">
+            <label>¿Tiene cónyuge o pareja?</label>
+            <div class="sino">
+              <label><input type="radio" name="tiene_conyuge" value="SI" /> SI</label>
+              <label><input type="radio" name="tiene_conyuge" value="NO" /> NO</label>
+            </div>
+          </div>
+        </div>
+        <div data-show-when="tiene_conyuge:SI" hidden>
+          <div class="row">
+            <div class="field grow"><label>Nombre del cónyuge</label><input type="text" name="fam_conyuge" /></div>
+            <div class="field"><label>Ocupación</label><input type="text" name="fam_conyuge_ocup" /></div>
+          </div>
+          <div class="row">
+            <div class="field grow"><label>Empresa donde trabaja</label><input type="text" name="fam_empresa" /></div>
+            <div class="field"><label>Cargo</label><input type="text" name="fam_cargo" /></div>
+            <div class="field"><label>Teléfono</label><input type="tel" name="fam_telefono" /></div>
+          </div>
+          <div class="row">
+            <div class="field grow"><label>Dirección</label><input type="text" name="fam_direccion" /></div>
+            <div class="field"><label>Ciudad</label><input type="text" name="fam_ciudad" /></div>
+          </div>
+        </div>
+
+        <!-- HIJOS (dinámico) -->
+        <div class="row">
+          <div class="field inline-q">
+            <label>¿Tiene hijos?</label>
+            <div class="sino">
+              <label><input type="radio" name="tiene_hijos" value="SI" /> SI</label>
+              <label><input type="radio" name="tiene_hijos" value="NO" /> NO</label>
+            </div>
+          </div>
+        </div>
+        <div data-show-when="tiene_hijos:SI" hidden>
+          <div class="subhead">
+            <span>Nombre de sus hijos</span>
+            <button type="button" id="btnAddHijo" class="btn btn-light btn-sm no-print">+ Agregar hijo</button>
+          </div>
+          <div id="hijosList" class="hijos-list"></div>
+        </div>
+
+        <div class="row mt">
+          <div class="field inline-q">
+            <label>¿Hay personas que dependen económicamente de usted?</label>
+            <div class="sino">
+              <label><input type="radio" name="tiene_dependientes" value="SI" /> SI</label>
+              <label><input type="radio" name="tiene_dependientes" value="NO" /> NO</label>
+            </div>
+          </div>
+        </div>
+        <div class="row" data-show-when="tiene_dependientes:SI" hidden>
+          <div class="field"><label>N.° de personas que dependen económicamente de usted</label><input type="number" min="0" name="dependientes" /></div>
+          <div class="field grow"><label>Parentesco</label><input type="text" name="dependientes_parentesco" /></div>
+        </div>
+
+        <div class="row">
+          <div class="field inline-q">
+            <label>¿Desea registrar datos del padre?</label>
+            <div class="sino">
+              <label><input type="radio" name="tiene_padre" value="SI" /> SI</label>
+              <label><input type="radio" name="tiene_padre" value="NO" /> NO</label>
+            </div>
+          </div>
+        </div>
+        <div class="row" data-show-when="tiene_padre:SI" hidden>
+          <div class="field grow"><label>Nombre del padre</label><input type="text" name="fam_padre" /></div>
+          <div class="field"><label>Ocupación</label><input type="text" name="fam_padre_ocup" /></div>
+        </div>
+
+        <div class="row">
+          <div class="field inline-q">
+            <label>¿Desea registrar datos de la madre?</label>
+            <div class="sino">
+              <label><input type="radio" name="tiene_madre" value="SI" /> SI</label>
+              <label><input type="radio" name="tiene_madre" value="NO" /> NO</label>
+            </div>
+          </div>
+        </div>
+        <div class="row" data-show-when="tiene_madre:SI" hidden>
+          <div class="field grow"><label>Nombre de la madre</label><input type="text" name="fam_madre" /></div>
+          <div class="field"><label>Ocupación</label><input type="text" name="fam_madre_ocup" /></div>
+        </div>
+        <div class="row">
+          <div class="field inline-q">
+            <label>¿Tiene casa propia?</label>
+            <div class="sino">
+              <label><input type="radio" name="casa_propia" value="SI" /> SI</label>
+              <label><input type="radio" name="casa_propia" value="NO" /> NO</label>
+            </div>
+          </div>
+          <div class="field inline-q">
+            <label>¿Arrendada?</label>
+            <div class="sino">
+              <label><input type="radio" name="casa_arrendada" value="SI" /> SI</label>
+              <label><input type="radio" name="casa_arrendada" value="NO" /> NO</label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- REFERENCIAS PERSONALES -->
+      <section class="block">
+        <h2 class="section-title">REFERENCIAS PERSONALES</h2>
+        <div class="row">
+          <div class="field inline-q">
+            <label>¿Lo recomienda alguien que trabaja en esta empresa?</label>
+            <div class="sino">
+              <label><input type="radio" name="recomendado" value="SI" /> SI</label>
+              <label><input type="radio" name="recomendado" value="NO" /> NO</label>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field grow"><label>Nombre</label><input type="text" name="recomendado_nombre" /></div>
+          <div class="field"><label>Cargo</label><input type="text" name="recomendado_cargo" /></div>
+        </div>
+        <p class="hint">Indique dos nombres de personas distintas a familiares o empleadores:</p>
+        <table class="grid-table">
+          <thead><tr><th>Nombre</th><th>Ocupación</th><th>Teléfono</th></tr></thead>
+          <tbody>
+            <tr><td><input type="text" name="refp_nombre_1" /></td><td><input type="text" name="refp_ocup_1" /></td><td><input type="tel" name="refp_tel_1" /></td></tr>
+            <tr><td><input type="text" name="refp_nombre_2" /></td><td><input type="text" name="refp_ocup_2" /></td><td><input type="tel" name="refp_tel_2" /></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ENCUESTA -->
+      <section class="block">
+        <h2 class="section-title">ENCUESTA</h2>
+        <div class="encuesta" id="encuesta"></div>
+        <div class="row mt" data-show-when="enc_tecno:SI" hidden>
+          <div class="field grow"><label>¿Cuál(es)?</label><input type="text" name="enc_cuales" /></div>
+        </div>
+      </section>
+
+      <!-- POLÍTICAS Y CONSENTIMIENTO -->
+      <section class="block">
+        <h2 class="section-title">Política de Control al Consumo de Licor y Drogas Psicoactivas</h2>
+        <p class="legal">
+          Manifiesto que he sido informado de la política de control al consumo de licor y de sustancias
+          psicoactivas de la empresa COMBUSES; debido a que desempeño un cargo de alto riesgo y un servicio
+          público; autorizo que la empresa me realice pruebas que comprueben mi sobriedad frente al consumo
+          de alcohol y sustancias psicoactivas, al ingreso y cada vez que lo estimen conveniente.
+          Tipos de pruebas: alcoholimetrías y pruebas tamiz para marihuana.
+        </p>
+        <p class="legal">
+          <strong>CONSENTIMIENTO INFORMADO:</strong> manifiesto que he sido informado por la coordinación del
+          talento humano de la empresa, de la obligatoriedad legal de desarrollar mi actividad laboral en
+          absoluto estado de sobriedad; por lo tanto certifico que he autorizado para que se me efectúen los
+          exámenes de laboratorio y ayudas paraclínicas que estén establecidas para el cargo dentro del
+          programa de salud ocupacional de la empresa, igualmente autorizo para que su contenido sirva para
+          los diferentes sistemas de vigilancia epidemiológica que estén establecidos
+          (Resolución 2346/07 y Resolución 3258 de 1998).
+        </p>
+
+        <h3 class="subsection-title">Constancia de documentación incompleta – Afiliaciones al Sistema de Seguridad Social y beneficios (grupo familiar)</h3>
+        <p class="legal">
+          Declaro que desde mi vinculación laboral fui informado(a) de manera clara y oportuna sobre los
+          requisitos y documentos necesarios para la afiliación de mi grupo familiar al Sistema de Seguridad
+          Social y demás beneficios (EPS, Caja de Compensación Familiar y otros). Así mismo, dejo constancia
+          de que a la fecha no he entregado la totalidad de la documentación requerida, entendiendo que el solo
+          documento de identidad no es suficiente para realizar dichos trámites. Reconozco que la afiliación de
+          mi grupo familiar no podrá gestionarse ni aprobarse hasta tanto no entregue la documentación
+          completa, y que cualquier retraso o imposibilidad en el acceso a estos beneficios será de mi
+          exclusiva responsabilidad.
+        </p>
+        <div class="row">
+          <div class="field"><label>Firma</label><input type="text" name="constancia_firma" placeholder="Nombre / firma" /></div>
+          <div class="field"><label>Cédula</label><input type="text" name="constancia_cedula" /></div>
+        </div>
+      </section>
+
+      <!-- DECLARACIÓN -->
+      <section class="block">
+        <p class="legal strong">
+          Declaro bajo la gravedad del juramento que los datos suministrados en esta hoja de vida son veraces
+          y a la vez autorizo a la Empresa para que verifique los datos que sean necesarios para cumplir con
+          los procesos que se adelanten.
+        </p>
+      </section>
+
+      <!-- EXCLUSIVO ENTREVISTADOR -->
+      <section class="block">
+        <h2 class="section-title">Exclusivo para el entrevistador</h2>
+        <div class="row">
+          <div class="field inline-q">
+            <label>APTO</label>
+            <div class="sino">
+              <label><input type="radio" name="apto" value="SI" /> SI</label>
+              <label><input type="radio" name="apto" value="NO" /> NO</label>
+            </div>
+          </div>
+          <div class="field grow"><label>Observaciones</label><input type="text" name="apto_obs" /></div>
+        </div>
+      </section>
+
+      <!-- FIRMAS -->
+      <section class="block firmas">
+        <div class="firma">
+          <div class="firma-pad-head no-print">
+            <span>Firme aquí con el dedo</span>
+            <button type="button" class="firma-clear" data-pad="candidato">Limpiar</button>
+          </div>
+          <div class="firma-canvas-wrap">
+            <canvas class="firma-canvas" id="firmaCandidato"></canvas>
+          </div>
+          <div class="firma-label">Firma Candidato</div>
+        </div>
+        <div class="firma">
+          <div class="firma-pad-head no-print">
+            <span>Firme aquí con el dedo</span>
+            <button type="button" class="firma-clear" data-pad="empleador">Limpiar</button>
+          </div>
+          <div class="firma-canvas-wrap">
+            <canvas class="firma-canvas" id="firmaEmpleador"></canvas>
+          </div>
+          <div class="firma-label">Empleador</div>
+        </div>
+      </section>
+
+    </form>
+  </main>
+
+  <script src="lib/supabase.js"></script>
+  <script src="supabase-config.js"></script>
+  <script src="version.js"></script>
+  <script src="app.js"></script>
+  <script src="cloud.js"></script>
+</body>
+</html>
