@@ -156,9 +156,10 @@
               <span class="foto-placeholder" id="fotoPlaceholder">Sin foto</span>
             </div>
             <div class="foto-actions no-print">
+              <button type="button" id="btnFotoCam" class="btn btn-light btn-sm">📷 Tomar foto</button>
               <label class="btn btn-light btn-sm">
-                📷 Foto
-                <input type="file" id="fotoInput" accept="image/*" capture="user" hidden />
+                🖼️ Subir
+                <input type="file" id="fotoInput" accept="image/*" hidden />
               </label>
               <button type="button" id="btnFotoDel" class="btn btn-light btn-sm">Quitar</button>
             </div>
@@ -544,6 +545,20 @@
 
     </form>
   </main>
+
+  <!-- Modal de cámara (no se imprime) -->
+  <div id="camModal" class="cam-modal no-print" hidden>
+    <div class="cam-box">
+      <div class="cam-titulo">Tomar foto del conductor</div>
+      <video id="camVideo" autoplay playsinline muted></video>
+      <p id="camError" class="cam-error" hidden></p>
+      <div class="cam-actions">
+        <button type="button" id="camCapture" class="btn btn-primary">📸 Capturar</button>
+        <button type="button" id="camSwitch" class="btn btn-light">🔄 Cámara</button>
+        <button type="button" id="camCancel" class="btn btn-light">Cancelar</button>
+      </div>
+    </div>
+  </div>
 
   <script src="lib/supabase.js"></script>
   <script src="supabase-config.js"></script>

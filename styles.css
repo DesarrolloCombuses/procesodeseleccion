@@ -190,6 +190,29 @@ textarea { resize: vertical; }
 .foto-actions { display: flex; gap: 6px; }
 .foto-actions .btn { background: var(--azul); color:#fff; }
 
+/* ===== MODAL DE CÁMARA ===== */
+.cam-modal {
+  position: fixed; inset: 0; z-index: 210;
+  background: rgba(0,0,0,.85);
+  display: flex; align-items: center; justify-content: center; padding: 16px;
+}
+.cam-box {
+  background: #fff; border-radius: 12px; padding: 16px;
+  width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 12px;
+}
+.cam-titulo { font-weight: 700; color: var(--azul); text-align: center; font-size: 15px; }
+#camVideo {
+  width: 100%; max-height: 60vh; background: #000; border-radius: 8px;
+  transform: scaleX(-1); /* efecto espejo, más natural */
+}
+.cam-actions { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.cam-actions .btn { background: var(--azul); color: #fff; }
+.cam-actions .btn-primary { background: #ffb703; color: #1f2937; }
+.cam-error {
+  background: #fde8e8; color: #b91c1c; border: 1px solid #f5c2c2;
+  border-radius: 8px; padding: 9px 12px; font-size: 13px; margin: 0; text-align: center;
+}
+
 /* ===== TABLAS ===== */
 .grid-table { width: 100%; border-collapse: collapse; }
 .grid-table th, .grid-table td { border: 1px solid var(--borde); padding: 0; }

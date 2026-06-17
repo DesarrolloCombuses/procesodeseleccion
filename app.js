@@ -139,6 +139,84 @@
     guardar();
   });
 
+  /* -------- Cámara en vivo (getUserMedia) -------- */
+  const camModal = document.getElementById('camModal');
+  const camVideo = document.getElementById('camVideo');
+  const camError = document.getElementById('camError');
+  const btnFotoCam = document.getElementById('btnFotoCam');
+  const camCapture = document.getElementById('camCapture');
+  const camSwitch = document.getElementById('camSwitch');
+  const camCancel = document.getElementById('camCancel');
+  let camStream = null;
+  let camFacing = 'user';
+
+  function detenerCamara() {
+    if (camStream) {
+      camStream.getTracks().forEach(function (t) { t.stop(); });
+      camStream = null;
+    }
+    camVideo.srcObject = null;
+  }
+
+  async function iniciarStream() {
+    detenerCamara();
+    if (camError) camError.hidden = true;
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      mostrarErrorCam('Este navegador no permite usar la cámara. Usa "Subir" para elegir una imagen.');
+      return;
+    }
+    try {
+      camStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: camFacing, width: { ideal: 1280 }, height: { ideal: 960 } },
+        audio: false
+      });
+      camVideo.srcObject = camStream;
+    } catch (e) {
+      let msg = 'No se pudo acceder a la cámara.';
+      if (e && (e.name === 'NotAllowedError' || e.name === 'SecurityError')) {
+        msg = 'Permiso de cámara denegado. Habilítalo en el navegador (ícono de la barra de direcciones) e inténtalo de nuevo.';
+      } else if (e && e.name === 'NotFoundError') {
+        msg = 'No se encontró ninguna cámara en este dispositivo.';
+      } else if (e && e.name === 'NotReadableError') {
+        msg = 'La cámara está siendo usada por otra aplicación. Ciérrala e inténtalo de nuevo.';
+      }
+      mostrarErrorCam(msg);
+    }
+  }
+
+  function mostrarErrorCam(msg) {
+    if (camError) { camError.textContent = msg; camError.hidden = false; }
+  }
+
+  function abrirCamara() {
+    camModal.hidden = false;
+    iniciarStream();
+  }
+  function cerrarCamara() {
+    detenerCamara();
+    camModal.hidden = true;
+  }
+
+  if (btnFotoCam) btnFotoCam.addEventListener('click', abrirCamara);
+  if (camCancel) camCancel.addEventListener('click', cerrarCamara);
+  if (camSwitch) camSwitch.addEventListener('click', function () {
+    camFacing = (camFacing === 'user') ? 'environment' : 'user';
+    iniciarStream();
+  });
+  if (camCapture) camCapture.addEventListener('click', function () {
+    if (!camVideo.videoWidth) { mostrarErrorCam('Espera a que cargue la cámara…'); return; }
+    let w = camVideo.videoWidth, h = camVideo.videoHeight;
+    const max = 600;
+    if (w > h && w > max) { h = h * max / w; w = max; }
+    else if (h > max) { w = w * max / h; h = max; }
+    const canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    canvas.getContext('2d').drawImage(camVideo, 0, 0, w, h);
+    mostrarFoto(canvas.toDataURL('image/jpeg', 0.85));
+    guardar();
+    cerrarCamara();
+  });
+
   /* -------- Paneles de firma (táctil + responsivo) -------- */
   function crearPadFirma(canvas) {
     const ctx = canvas.getContext('2d');
