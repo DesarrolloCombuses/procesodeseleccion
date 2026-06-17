@@ -35,9 +35,12 @@
     <div class="toolbar-title">📋 Hoja de Vida Conductor</div>
     <div class="toolbar-actions">
       <span id="saveStatus" class="save-status">Guardado automático activo</span>
-      <button type="button" id="btnPrint" class="btn btn-primary">🖨️ Imprimir / PDF</button>
+      <button type="button" id="btnAdmin" class="btn btn-light solo-admin">🗂️ Revisar hojas</button>
+      <button type="button" id="btnEnviar" class="btn btn-primary">📤 Enviar</button>
+      <button type="button" id="btnPrint" class="btn btn-light">🖨️ Imprimir / PDF</button>
       <button type="button" id="btnNew" class="btn btn-light">🗑️ Nuevo</button>
       <button type="button" id="btnInstall" class="btn btn-light" hidden>⬇️ Instalar app</button>
+      <span id="rolBadge" class="rol-badge" hidden></span>
       <span id="userEmail" class="user-email" hidden></span>
       <button type="button" id="btnLogout" class="btn btn-light" hidden>🔓 Salir</button>
       <span id="appVersion" class="app-version" title="Versión de la aplicación"></span>
@@ -504,8 +507,8 @@
         </p>
       </section>
 
-      <!-- EXCLUSIVO ENTREVISTADOR -->
-      <section class="block">
+      <!-- EXCLUSIVO ENTREVISTADOR (solo administrador) -->
+      <section class="block solo-admin">
         <h2 class="section-title">Exclusivo para el entrevistador</h2>
         <div class="row">
           <div class="field inline-q">
@@ -531,7 +534,7 @@
           </div>
           <div class="firma-label">Firma Candidato</div>
         </div>
-        <div class="firma">
+        <div class="firma solo-admin">
           <div class="firma-pad-head no-print">
             <span>Firme aquí con el dedo</span>
             <button type="button" class="firma-clear" data-pad="empleador">Limpiar</button>
@@ -545,6 +548,30 @@
 
     </form>
   </main>
+
+  <!-- Panel de administrador: lista de hojas (no se imprime) -->
+  <div id="adminModal" class="admin-modal no-print" hidden>
+    <div class="admin-box">
+      <div class="admin-head">
+        <h2 class="admin-title">🗂️ Hojas de vida — Revisión</h2>
+        <button type="button" id="adminClose" class="btn btn-light btn-sm">✕ Cerrar</button>
+      </div>
+      <div class="admin-tabs">
+        <button type="button" class="admin-tab activo" data-estado="pendiente">Pendientes</button>
+        <button type="button" class="admin-tab" data-estado="aprobado">Aprobadas</button>
+        <button type="button" class="admin-tab" data-estado="rechazado">Rechazadas</button>
+      </div>
+      <div id="adminLista" class="admin-lista"></div>
+    </div>
+  </div>
+
+  <!-- Barra de acciones del administrador al revisar una hoja (no se imprime) -->
+  <div id="adminAcciones" class="admin-acciones no-print" hidden>
+    <span class="admin-rev-info" id="adminRevInfo">Revisando hoja de vida</span>
+    <button type="button" id="btnAprobar" class="btn btn-primary">✅ Aprobar y firmar</button>
+    <button type="button" id="btnRechazar" class="btn btn-light">❌ Rechazar</button>
+    <button type="button" id="btnCancelRev" class="btn btn-light">Cancelar</button>
+  </div>
 
   <!-- Modal de cámara (no se imprime) -->
   <div id="camModal" class="cam-modal no-print" hidden>
@@ -565,5 +592,6 @@
   <script src="version.js"></script>
   <script src="app.js"></script>
   <script src="cloud.js"></script>
+  <script src="admin.js"></script>
 </body>
 </html>

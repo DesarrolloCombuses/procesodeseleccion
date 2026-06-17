@@ -8,6 +8,7 @@ const ASSETS = [
   './styles.css',
   './app.js',
   './cloud.js',
+  './admin.js',
   './supabase-config.js',
   './lib/supabase.js',
   './version.js',

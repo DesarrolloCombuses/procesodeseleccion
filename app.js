@@ -483,7 +483,8 @@
       toast.className = 'toast-aviso no-print';
       document.body.appendChild(toast);
     }
-    toast.textContent = '⚠️ ' + msg;
+    toast.textContent = (arguments[1] ? '✅ ' : '⚠️ ') + msg;
+    toast.classList.toggle('toast-ok', !!arguments[1]);
     toast.classList.add('visible');
     clearTimeout(toastTimer);
     toastTimer = setTimeout(function () { toast.classList.remove('visible'); }, 5000);
@@ -546,9 +547,10 @@
       const w = document.getElementById('firmaCandidato').closest('.firma-canvas-wrap');
       marcarError(w); faltantes.push(w);
     }
-    if (!padEmpleador.valor()) {
-      const w = document.getElementById('firmaEmpleador').closest('.firma-canvas-wrap');
-      marcarError(w); faltantes.push(w);
+    // Firma del empleador: solo se exige si la sección está visible (admin)
+    const empWrap = document.getElementById('firmaEmpleador').closest('.firma-canvas-wrap');
+    if (empWrap && empWrap.offsetParent !== null && !padEmpleador.valor()) {
+      marcarError(empWrap); faltantes.push(empWrap);
     }
 
     return faltantes;
@@ -561,6 +563,63 @@
     const cont = e.target.closest && (e.target.closest('.sino') || e.target.closest('.field'));
     if (cont) limpiarError(cont);
   });
+
+  /* -------- Carga completa de un estado (para el panel admin) -------- */
+  function aplicarTodo(state) {
+    aplicar(state);
+    actualizarTodasOtra();
+    refrescarCondicionales();
+    actualizarHijos();
+    sincronizarEspejos();
+  }
+
+  // API del formulario, usada por el panel de administrador (admin.js)
+  window.hv = {
+    recolectar: recolectar,
+    aplicar: aplicarTodo,
+    validar: validarCompleto,
+    avisar: avisarValidacion
+  };
+
+  /* -------- Enviar hoja de vida a la nube -------- */
+  const btnEnviar = document.getElementById('btnEnviar');
+  if (btnEnviar) {
+    btnEnviar.addEventListener('click', async function () {
+      const faltantes = validarCompleto();
+      if (faltantes.length > 0) {
+        avisarValidacion('Faltan ' + faltantes.length + ' campo(s) por completar antes de enviar.');
+        const p = faltantes[0];
+        if (p && p.scrollIntoView) p.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+      if (!window.cloud || !window.cloud.token()) {
+        avisarValidacion('Debes iniciar sesión para enviar.');
+        return;
+      }
+      btnEnviar.disabled = true;
+      btnEnviar.textContent = 'Enviando…';
+      try {
+        const state = recolectar();
+        const c = state.campos || {};
+        const payload = {
+          nombres: c.nombres || '',
+          apellidos: c.apellidos || '',
+          identificacion: c.identificacion || '',
+          cargo: c.cargo || '',
+          celular: c.celular || '',
+          datos: state,
+          estado: 'pendiente'
+        };
+        await window.cloud.guardarHoja(payload);
+        avisarValidacion('Hoja de vida enviada para revisión.', true);
+      } catch (e) {
+        avisarValidacion('No se pudo enviar: ' + (e.message || e));
+      } finally {
+        btnEnviar.disabled = false;
+        btnEnviar.textContent = '📤 Enviar';
+      }
+    });
+  }
 
   /* -------- Botones -------- */
   document.getElementById('btnPrint').addEventListener('click', function () {

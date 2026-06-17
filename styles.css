@@ -53,6 +53,10 @@ body {
   border-radius: 8px; padding: 9px 12px; font-size: 13px; margin: 14px 0 0; text-align: center;
 }
 .user-email { font-size: 12px; opacity: .9; white-space: nowrap; max-width: 180px; overflow: hidden; text-overflow: ellipsis; }
+.rol-badge { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 20px; background: rgba(255,255,255,.2); white-space: nowrap; }
+
+/* Elementos exclusivos del administrador: ocultos salvo que el body tenga rol-admin */
+body:not(.rol-admin) .solo-admin { display: none !important; }
 
 /* ===== TOOLBAR ===== */
 .toolbar {
@@ -190,6 +194,46 @@ textarea { resize: vertical; }
 .foto-actions { display: flex; gap: 6px; }
 .foto-actions .btn { background: var(--azul); color:#fff; }
 
+/* ===== PANEL DE ADMINISTRADOR ===== */
+.admin-modal {
+  position: fixed; inset: 0; z-index: 205;
+  background: rgba(0,0,0,.6);
+  display: flex; align-items: flex-start; justify-content: center; padding: 24px 16px;
+  overflow-y: auto;
+}
+.admin-box {
+  background: #fff; border-radius: 12px; width: 100%; max-width: 720px;
+  display: flex; flex-direction: column; max-height: 85vh; overflow: hidden;
+  box-shadow: 0 14px 40px rgba(0,0,0,.3);
+}
+.admin-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--borde); }
+.admin-title { font-size: 16px; color: var(--azul); margin: 0; }
+.admin-head .btn { background: var(--azul); color: #fff; }
+.admin-tabs { display: flex; gap: 4px; padding: 10px 14px 0; }
+.admin-tab {
+  border: 0; background: #eef2f7; color: var(--label); font-weight: 600;
+  padding: 8px 14px; border-radius: 8px 8px 0 0; cursor: pointer; font-size: 13.5px;
+}
+.admin-tab.activo { background: var(--azul); color: #fff; }
+.admin-lista { padding: 12px 14px 18px; overflow-y: auto; }
+.admin-item {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  border: 1px solid var(--borde); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px;
+}
+.admin-item-nombre { font-weight: 700; font-size: 14px; }
+.admin-item-sub { font-size: 12px; color: var(--label); margin-top: 2px; }
+.admin-item .btn-primary { background: var(--azul); color: #fff; }
+.admin-cargando, .admin-vacio { text-align: center; color: var(--label); padding: 20px; }
+
+.admin-acciones {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
+  background: #fff; border-top: 2px solid var(--azul);
+  display: flex; align-items: center; gap: 10px; padding: 10px 16px; flex-wrap: wrap;
+  box-shadow: 0 -4px 14px rgba(0,0,0,.12);
+}
+.admin-rev-info { font-weight: 600; font-size: 13px; flex: 1 1 auto; min-width: 160px; }
+.admin-acciones .btn-primary { background: #16a34a; color: #fff; }
+
 /* ===== MODAL DE CÁMARA ===== */
 .cam-modal {
   position: fixed; inset: 0; z-index: 210;
@@ -293,6 +337,7 @@ input.campo-error, select.campo-error, textarea.campo-error {
   opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s;
 }
 .toast-aviso.visible { opacity: 1; transform: translate(-50%, 0); }
+.toast-aviso.toast-ok { background: #16a34a; }
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 640px) {

@@ -9,4 +9,4 @@
      - MENOR   -> funciones nuevas             (1.0.1 -> 1.1.0)
      - MAYOR   -> cambios grandes/incompatibles(1.1.0 -> 2.0.0)
    ============================================================ */
-self.APP_VERSION = '1.9.0';
+self.APP_VERSION = '1.10.0';

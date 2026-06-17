@@ -38,12 +38,69 @@
     else localStorage.removeItem(SKEY);
   }
 
-  // Disponible para la siguiente fase (guardar datos y PDF firmado)
+  /* ---- Helpers de base de datos (REST con la sesión del usuario) ---- */
+  function headersDB(extra) {
+    const s = leerSesion();
+    return Object.assign({
+      apikey: cfg.key,
+      Authorization: 'Bearer ' + (s && s.access_token ? s.access_token : cfg.key),
+      'Content-Type': 'application/json'
+    }, extra || {});
+  }
+  async function dbSelect(query) {
+    const res = await fetch(cfg.url + '/rest/v1/' + query, { headers: headersDB() });
+    if (!res.ok) throw new Error('DB ' + res.status + ': ' + (await res.text()));
+    return res.json();
+  }
+  async function dbInsert(tabla, obj) {
+    const res = await fetch(cfg.url + '/rest/v1/' + tabla, {
+      method: 'POST', headers: headersDB({ Prefer: 'return=representation' }), body: JSON.stringify(obj)
+    });
+    if (!res.ok) throw new Error('DB ' + res.status + ': ' + (await res.text()));
+    return res.json();
+  }
+  async function dbUpdate(tabla, id, cambios) {
+    const res = await fetch(cfg.url + '/rest/v1/' + tabla + '?id=eq.' + id, {
+      method: 'PATCH', headers: headersDB({ Prefer: 'return=representation' }), body: JSON.stringify(cambios)
+    });
+    if (!res.ok) throw new Error('DB ' + res.status + ': ' + (await res.text()));
+    return res.json();
+  }
+  async function cargarRol() {
+    const s = leerSesion();
+    if (!s || !s.user) return 'usuario';
+    try {
+      const arr = await dbSelect('perfiles?select=rol&id=eq.' + s.user.id);
+      return (arr[0] && arr[0].rol) || 'usuario';
+    } catch (e) { dbg('rol error: ' + e.message); return 'usuario'; }
+  }
+
+  // API disponible para el resto de la app (formulario / panel admin)
   window.cloud = {
     cfg: cfg,
     sesion: leerSesion,
-    token: function () { const s = leerSesion(); return s ? s.access_token : null; }
+    token: function () { const s = leerSesion(); return s ? s.access_token : null; },
+    rol: 'usuario',
+    esAdmin: false,
+    select: dbSelect,
+    insert: dbInsert,
+    update: dbUpdate,
+    guardarHoja: function (payload) { return dbInsert('hojas_vida', payload); }
   };
+
+  async function aplicarRol() {
+    const rol = await cargarRol();
+    window.cloud.rol = rol;
+    window.cloud.esAdmin = (rol === 'admin');
+    document.body.classList.toggle('rol-admin', rol === 'admin');
+    const badge = document.getElementById('rolBadge');
+    if (badge) {
+      badge.textContent = (rol === 'admin') ? '🛡️ Administrador' : '👤 Personal';
+      badge.hidden = false;
+    }
+    dbg('rol del usuario: ' + rol);
+    document.dispatchEvent(new CustomEvent('sesion-rol', { detail: { rol: rol, esAdmin: rol === 'admin' } }));
+  }
 
   function mostrarApp(usuario) {
     loginScreen.hidden = true;
@@ -52,11 +109,15 @@
       userEmailEl.hidden = false;
     }
     if (btnLogout) btnLogout.hidden = false;
+    aplicarRol();
   }
   function mostrarLogin() {
     loginScreen.hidden = false;
     if (userEmailEl) userEmailEl.hidden = true;
     if (btnLogout) btnLogout.hidden = true;
+    document.body.classList.remove('rol-admin');
+    const badge = document.getElementById('rolBadge');
+    if (badge) badge.hidden = true;
   }
 
   /* ---- Llamadas de autenticación (fetch directo) ---- */
